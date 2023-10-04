@@ -6,7 +6,7 @@ export const sendToken = (res, user, message, statusCode = 200) => {
         sameSite: "none",
     };
 
-    res.status(statusCode).json({
+    return res.status(statusCode).json({
         success: true,
         message,
         token,
