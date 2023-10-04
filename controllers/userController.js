@@ -7,7 +7,9 @@ export const register = async (req, res, next) => {
         lastName,
         email,
         phone,
-        role
+        role,
+        password,
+        confirmPassword
     } = req.body;
 
     if (!firstName || !lastName || !phone) {
@@ -36,6 +38,24 @@ export const register = async (req, res, next) => {
             })
         }
     }
+    if (!password || !confirmPassword) {
+        return res.status(400).json({
+            success: false,
+            message: "Please provide password and confirmpassword"
+        })
+    }
+    if (password != confirmPassword) {
+        return res.status(400).json({
+            success: false,
+            message: "Password and Confirm Password Mis-Match"
+        })
+    }
+    if (password.length < 6) {
+        return res.status(400).json({
+            success: false,
+            message: "Enter atleast 6 digit password"
+        })
+    }
 
     // logic for creating a UID
     let uid = 1;
@@ -59,5 +79,10 @@ export const register = async (req, res, next) => {
         userName,
         role
     });
+
+    const hashedPassKey = await user.generatePassword(String(password).trim());
+    user.password = hashedPassKey;
+    await user.save();
+
     sendToken(res, user, "Registered Successfully", 201, true);
 };
