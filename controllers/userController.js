@@ -11,7 +11,7 @@ export const register = async (req, res, next) => {
         password,
         confirmPassword
     } = req.body;
-    console.log("req body",req.body)
+    console.log("req body", req.body)
     if (!firstName || !lastName || !phone) {
         return res.status(400).json({
             success: false,
@@ -83,8 +83,11 @@ export const register = async (req, res, next) => {
     const hashedPassKey = await user.generatePassword(String(password).trim());
     user.password = hashedPassKey;
     user.save();
-    
-    sendToken(res, user, "Registered Successfully", 201, true);
+    return res.status(200).json({
+        success: true,
+        message: 'Registered Successfully!',
+        user
+    })
 };
 
 export const logIn = async (req, res, next) => {
