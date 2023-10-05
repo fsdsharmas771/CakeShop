@@ -2,6 +2,7 @@ import express from "express";
 import { config } from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import ErrorMiddleware from "./middlewares/Error.js";
 
 config({
     path: "./config/config.env",
@@ -34,3 +35,4 @@ app.get("/", (req, res) =>
     )
 );
 
+app.use(ErrorMiddleware);
