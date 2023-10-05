@@ -1,7 +1,8 @@
 import { User } from "../models/User.js";
+import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import { sendToken } from "../utills/sendToken.js";
 
-export const register = async (req, res, next) => {
+export const register = catchAsyncError(async (req, res, next) => {
     const {
         firstName,
         lastName,
@@ -88,7 +89,7 @@ export const register = async (req, res, next) => {
         message: 'Registered Successfully!',
         user
     })
-};
+});
 
 export const logIn = async (req, res, next) => {
     const { phone, password } = req.body;
