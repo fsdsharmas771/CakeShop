@@ -22,12 +22,10 @@ const schema = new mongoose.Schema(
         gst: {
             type: Number,
             require: true,
-            default: 0
         },
         discount: {
             type: Number,
             require: true,
-            default: 0
         },
         finalPrice: {
             type: Number,
