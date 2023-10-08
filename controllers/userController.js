@@ -2,6 +2,7 @@ import { User } from "../models/User.js";
 import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import { sendToken } from "../utills/sendToken.js";
 import ErrorHandler from "../utills/errorHandler.js";
+import { Store } from "../models/Store.js";
 
 export const register = catchAsyncError(async (req, res, next) => {
     const {
@@ -11,7 +12,8 @@ export const register = catchAsyncError(async (req, res, next) => {
         phone,
         role,
         password,
-        confirmPassword
+        confirmPassword,
+        storeId
     } = req.body;
     if (!firstName || !lastName || !phone)
         return next(new ErrorHandler("Please Send All FirstName LastName and Phone", 400));
@@ -48,7 +50,8 @@ export const register = catchAsyncError(async (req, res, next) => {
         phone: phone.trim(),
         uid,
         userName,
-        role
+        role,
+        store: storeId
     });
 
     const hashedPassKey = await user.generatePassword(String(password).trim());
@@ -69,5 +72,5 @@ export const logIn = async (req, res, next) => {
     if (!user) return next(new ErrorHandler("User Not Found With This Number", 404));
     const match = await user.matchPassword(String(password).trim());
     if (!match) return next(new ErrorHandler("Incorrect Password", 400));
-    return sendToken(res, user, "Correct OTP, your are logged in", 201, false);
+    return sendToken(res, user, "Logged In Successfully", 201, false);
 };

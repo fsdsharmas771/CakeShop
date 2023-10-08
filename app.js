@@ -21,9 +21,11 @@ app.use(cookieParser());
 app.use(cors());
 
 import user from "./routes/userRoutes.js";
+import store from "./routes/storeRoutes.js"
 
 
 app.use("/api/v1/user", user);
+app.use("/api/v1/store",store)
 
 
 

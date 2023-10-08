@@ -60,6 +60,10 @@ const schema = new mongoose.Schema(
             type: String,
             select: false,
         },
+        store: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Store",
+        }
     },
     { timestamps: true }
 );
