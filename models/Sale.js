@@ -7,7 +7,7 @@ const schema = new mongoose.Schema(
             type: Number,
             require: true
         },
-        Customer: {
+        customer: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         },
@@ -31,9 +31,9 @@ const schema = new mongoose.Schema(
                     required: true,
                     default: 0
                 },
-                discount: {
+                totalAmount: {
                     type: Number,
-                    default: 0
+                    required: true,
                 }
             }
         ],

@@ -1,7 +1,6 @@
 import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import ErrorHandler from "../utills/errorHandler.js";
 import { Product } from "../models/Product.js";
-import { query } from "express";
 
 
 export const addProduct = catchAsyncError(async (req, res, next) => {

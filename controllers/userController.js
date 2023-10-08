@@ -2,7 +2,6 @@ import { User } from "../models/User.js";
 import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import { sendToken } from "../utills/sendToken.js";
 import ErrorHandler from "../utills/errorHandler.js";
-import { Store } from "../models/Store.js";
 
 export const register = catchAsyncError(async (req, res, next) => {
     const {
@@ -41,7 +40,6 @@ export const register = catchAsyncError(async (req, res, next) => {
     userName = userName.replace(/\s/g, "");
     userName = userName.toUpperCase();
     userName = userName + uid;
-    console.log("lets create user")
 
     user = await User.create({
         firstName,
@@ -56,7 +54,7 @@ export const register = catchAsyncError(async (req, res, next) => {
 
     const hashedPassKey = await user.generatePassword(String(password).trim());
     user.password = hashedPassKey;
-    user.save();
+    await user.save();
     return res.status(200).json({
         success: true,
         message: 'Registered Successfully!',
@@ -74,3 +72,21 @@ export const logIn = async (req, res, next) => {
     if (!match) return next(new ErrorHandler("Incorrect Password", 400));
     return sendToken(res, user, "Logged In Successfully", 201, false);
 };
+
+export const getUsers = catchAsyncError(async (req, res, next) => {
+    const { phone, uid, page, perPage } = req.query;
+    const options = {
+        page: parseInt(page, 10) || 1,
+        limit: parseInt(perPage, 10) || 20,
+        sort: { _id: -1 },
+    };
+    let query = {};
+    if (phone) query.phone = phone;
+    if (uid) query.uid = uid;
+    let users = await User.paginate(query, options);
+    return res.status(200).json({
+        success: true,
+        message: 'Registered Successfully!',
+        users
+    })
+});
