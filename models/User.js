@@ -38,7 +38,7 @@ const schema = new mongoose.Schema(
         },
         role: {
             type: String,
-            enum: ["Admin", "Manager"],
+            enum: ["Admin", "Manager", "Customer"],
             default: "Manager",
         },
         avatar: {
@@ -63,7 +63,20 @@ const schema = new mongoose.Schema(
         store: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Store",
-        }
+        },
+        address: {
+            line1: {
+                type: String,
+                required: true
+            },
+            line2: {
+                type: String,
+                required: true
+            },
+            line3: {
+                type: String,
+            }
+        },
     },
     { timestamps: true }
 );

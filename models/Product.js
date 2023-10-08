@@ -13,7 +13,25 @@ const schema = new mongoose.Schema(
         },
         category: {
             type: String,
-            enum: []
+            enum: ["1", "2", "3", "4"]
+        },
+        price: {
+            type: Number,
+            require: true
+        },
+        gst: {
+            type: Number,
+            require: true,
+            default: 0
+        },
+        discount: {
+            type: Number,
+            require: true,
+            default: 0
+        },
+        finalPrice: {
+            type: Number,
+            require: true,
         }
     },
     { timestamps: true }
