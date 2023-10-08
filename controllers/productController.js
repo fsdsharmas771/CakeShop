@@ -4,7 +4,8 @@ import { Product } from "../models/Product.js";
 
 
 export const addProduct = catchAsyncError(async (req, res, next) => {
-    const { name, category, price, } = req.body;
+    const { name, category, price, gst, discount } = req.body;
+    if (!name && !category && !price) return next(new ErrorHandler("Please Send All: name category and price", 400));
     let pid = 1;
     const last = await Product.findOne().sort({ field: "asc", _id: -1 }).limit(1);
     if (last) {
