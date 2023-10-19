@@ -1,16 +1,25 @@
 import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import ErrorHandler from "../utills/errorHandler.js";
 import { Product } from "../models/Product.js";
+import { uploadImageToFirebase } from "../utills/imageUploader.js";
 
 
 export const addProduct = catchAsyncError(async (req, res, next) => {
     let { name, category, price, gst, discount } = req.body;
     if (!name || !category || !price) return next(new ErrorHandler("Please Send All: name category and price", 400));
+    const imageBuffer = req.file.buffer;
+    let imageUrl;
+    // Upload image to Firebase Storage
+
+
 
     let pid = 1;
     const last = await Product.findOne().sort({ field: "asc", _id: -1 }).limit(1);
     if (last) {
         pid = last.pid + 1;
+    }
+    if (imagePath) {
+        imageUrl = await uploadImageToFirebase(imageBuffer, `images${pid}/` + req.file.originalname);
     }
     if (!gst) gst = 0;
     if (!discount) discount = 0;
@@ -23,7 +32,8 @@ export const addProduct = catchAsyncError(async (req, res, next) => {
         price,
         gst,
         discount,
-        finalPrice
+        finalPrice,
+        image: imageUrl
     })
     return res.status(200).json({
         success: true,
@@ -37,6 +47,14 @@ export const editProduct = catchAsyncError(async (req, res, next) => {
     if (!pid) return next(new ErrorHandler("Please Send pid", 400));
     let product = await Product.findOne({ pid });
     if (!product) return next(new ErrorHandler("No Product Found", 400));
+    const imageBuffer = req.file.buffer;
+    console.log(req.file)
+    let imageUrl;
+    // Upload image to Firebase Storage
+    if (imageBuffer) {
+        imageUrl = await uploadImageToFirebase(imageBuffer, `images${pid}/` + req.file.originalname);
+    }
+    imageUrl ? product.image = imageUrl : null;
     name ? product.name = name : null;
     category ? product.category = category : null;
     price ? product.price = price : null;

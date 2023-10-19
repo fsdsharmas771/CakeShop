@@ -3,10 +3,12 @@ import ErrorHandler from "../utills/errorHandler.js";
 import { User } from "../models/User.js";
 import { Product } from "../models/Product.js";
 import { Sale } from "../models/Sale.js";
+import { getTimeStampYearMonthDay } from '../utills/dateFunctions.js';
+import mongoose from "mongoose";
 
 
 export const saleInvoice = catchAsyncError(async (req, res, next) => {
-    let { userId, userObj, orderDate, pickupDate, items } = req.body;
+    let { userId, userObj, orderDate, pickupDate, items, store } = req.body;
     if (!userId && !userObj)
         return next(new ErrorHandler("Please Send userId or userObj", 400));
     if (userId && userObj)
@@ -52,6 +54,7 @@ export const saleInvoice = catchAsyncError(async (req, res, next) => {
     }
     let Invoice = await Sale.create({
         invoiceNo,
+        manager: req.user._id,
         customer: user._id,
         orderDate,
         pickupDate,
@@ -59,7 +62,8 @@ export const saleInvoice = catchAsyncError(async (req, res, next) => {
         subtotal,
         totalTax,
         totalDiscount,
-        finalAmount
+        finalAmount,
+        store
     });
     return res.status(200).json({
         success: true,
@@ -98,9 +102,37 @@ export const purchaseInvoice = catchAsyncError(async (req, res, next) => {
 });
 
 export const saleReport = catchAsyncError(async (req, res, next) => {
+    let { startDate, endDate, store } = req.query;
+    let startTimeStamp;
+    let endTimeStamp;
+    if (!startDate || !endDate) {
+        let currentDate = getTimeStampYearMonthDay();
+        startTimeStamp = new Date(`${currentDate}T00:00:00.000Z`);
+        endTimeStamp = new Date(`${currentDate}T23:59:59.999Z`);
+    } else {
+        startTimeStamp = new Date(`${startDate}T00:00:00.000Z`);
+        endTimeStamp = new Date(`${endDate}T23:59:59.999Z`);
+    }
+    let query = {};
+    let totalSale;
+    query.createdAt = { $gte: startTimeStamp, $lt: endTimeStamp };
+    if (store) {
+        // query.store = store; // Convert store to ObjectId
+        totalSale = await Sale.aggregate([
+            { $match: query },
+            {
+                $group: {
+                    _id: null,
+                    totalFinalAmount: { $sum: '$finalAmount' },
+                },
+            },
+        ]);
+    }
+
     return res.status(200).json({
         success: true,
-        message: 'Sales Report'
+        message: 'Sales Report',
+        totalSale
     })
 });
 

@@ -7,6 +7,10 @@ const schema = new mongoose.Schema(
             type: Number,
             require: true
         },
+        manager: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
         customer: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
@@ -54,6 +58,10 @@ const schema = new mongoose.Schema(
         finalAmount: {
             type: Number,
             require: true,
+        },
+        store: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Store",
         }
     },
     { timestamps: true }

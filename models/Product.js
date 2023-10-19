@@ -30,6 +30,9 @@ const schema = new mongoose.Schema(
         finalPrice: {
             type: Number,
             require: true,
+        },
+        image: {
+            type: String
         }
     },
     { timestamps: true }

@@ -8,7 +8,7 @@ const router = express.Router();
 // To register a new user
 router.route("/genrateSaleInvoice").post(isAuthenticated, saleInvoice);
 router.route("/purchaseEntry").post(isAuthenticated, purchaseInvoice);
-router.route("/saleReport").get(isAuthenticated, saleReport);
+router.route("/saleReport").get( saleReport);
 router.route("/purchaseReport").get(isAuthenticated, purchaseReport);
 router.route("/getSaleInvoices").get(isAuthenticated, getSaleInvoices);
 
