@@ -79,7 +79,8 @@ export const getSaleInvoices = catchAsyncError(async (req, res, next) => {
         limit: parseInt(perPage, 10) || 20,
         populate: [
             { path: "customer", select: "userName phone -_id" },
-            { path: "items.product", select: "name -_id" }
+            { path: "items.product", select: "name -_id" },
+            { path: "store" }
         ],
         sort: { _id: -1 },
     };
