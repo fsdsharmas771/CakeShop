@@ -4,7 +4,6 @@ import { User } from "../models/User.js";
 import { Product } from "../models/Product.js";
 import { Sale } from "../models/Sale.js";
 import { getTimeStampYearMonthDay } from '../utills/dateFunctions.js';
-import mongoose from "mongoose";
 
 
 export const saleInvoice = catchAsyncError(async (req, res, next) => {

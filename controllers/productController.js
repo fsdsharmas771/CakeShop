@@ -7,7 +7,8 @@ import { uploadImageToFirebase } from "../utills/imageUploader.js";
 export const addProduct = catchAsyncError(async (req, res, next) => {
     let { name, category, price, gst, discount } = req.body;
     if (!name || !category || !price) return next(new ErrorHandler("Please Send All: name category and price", 400));
-    const imageBuffer = req.file.buffer;
+    let imageBuffer;
+    req.file ? imageBuffer = req.file.buffer : null;
     let imageUrl;
     // Upload image to Firebase Storage
 
